@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+name: RedisPubSubWithDotNet
+metadata:
+  template: dotnet-redis-pubsub-azure-container-apps
+services:
+  publisher:
+    project: ./Publisher
+    host: containerapp
+    language: dotnet
+    module: app/publisher
+    docker:
+      path: ./Dockerfile
+      context: ../
+  subscriber:
+    project: ./Subscriber
+    host: containerapp
+    language: dotnet
+    module: app/subscriber
+    docker:
+      path: ./Dockerfile
+      context: ../
