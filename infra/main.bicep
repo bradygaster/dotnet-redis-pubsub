@@ -9,6 +9,12 @@ param environmentName string
 @description('Primary location for all resources')
 param location string
 
+@description('Specifies if the subscriber app exists')
+param subscriberAppExists bool = false
+
+@description('Specifies if the publisher app exists')
+param publisherAppExists bool = false
+
 var tags = { 'azd-env-name': environmentName }
 var abbrs = loadJsonContent('./abbreviations.json')
 var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
@@ -79,13 +85,14 @@ module subscriberIdentity 'identity.bicep' = {
 }
 
 // publisher
-module publisher 'core/host/container-app.bicep' = {
+module publisher 'app/publisher.bicep' = {
   name: 'publisher'
   scope: resourceGroup
   params: {
     name: 'publisher'
     location: location
-    tags: union(tags, { 'azd-service-name': 'publisher' })
+    tags: tags
+    exists: publisherAppExists
     containerAppsEnvironmentName: containerApps.outputs.environmentName
     containerRegistryName: containerApps.outputs.registryName
     identityName: publisherIdentity.outputs.identityName
@@ -93,13 +100,14 @@ module publisher 'core/host/container-app.bicep' = {
 }
 
 // subscriber
-module subscriber 'core/host/container-app.bicep' = {
+module subscriber 'app/subscriber.bicep' = {
   name: 'subscriber'
   scope: resourceGroup
   params: {
     name: 'subscriber'
     location: location
-    tags: union(tags, { 'azd-service-name': 'subscriber' })
+    tags: tags
+    exists: subscriberAppExists
     containerAppsEnvironmentName: containerApps.outputs.environmentName
     containerRegistryName: containerApps.outputs.registryName
     identityName: subscriberIdentity.outputs.identityName
