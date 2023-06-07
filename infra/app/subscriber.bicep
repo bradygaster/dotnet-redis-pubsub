@@ -36,6 +36,7 @@ module app '../core/host/container-app-upsert.bicep' = {
     targetPort: 80
     serviceBinds: serviceBinds
     external: false
+    ingressEnabled: false
   }
 }
 
