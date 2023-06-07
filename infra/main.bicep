@@ -59,6 +59,25 @@ module redis 'core/host/container-app.bicep' = {
   }
 }
 
+// identities
+module publisherIdentity 'identity.bicep' = {
+  scope: resourceGroup
+  name: 'publisherIdentity'
+  params: {
+    identityName: '${abbrs.managedIdentityUserAssignedIdentities}publisher-${resourceToken}'
+    location: location
+  }
+}
+
+module subscriberIdentity 'identity.bicep' = {
+  scope: resourceGroup
+  name: 'subscriberIdentity'
+  params: {
+    identityName: '${abbrs.managedIdentityUserAssignedIdentities}subscriber-${resourceToken}'
+    location: location
+  }
+}
+
 // publisher
 module publisher 'core/host/container-app.bicep' = {
   name: 'publisher'
@@ -69,7 +88,7 @@ module publisher 'core/host/container-app.bicep' = {
     tags: union(tags, { 'azd-service-name': 'publisher' })
     containerAppsEnvironmentName: containerApps.outputs.environmentName
     containerRegistryName: containerApps.outputs.registryName
-    identityName: '${abbrs.managedIdentityUserAssignedIdentities}publisher-${resourceToken}'
+    identityName: publisherIdentity.outputs.identityName
   }
 }
 
@@ -83,7 +102,7 @@ module subscriber 'core/host/container-app.bicep' = {
     tags: union(tags, { 'azd-service-name': 'subscriber' })
     containerAppsEnvironmentName: containerApps.outputs.environmentName
     containerRegistryName: containerApps.outputs.registryName
-    identityName: '${abbrs.managedIdentityUserAssignedIdentities}subscriber-${resourceToken}'
+    identityName: subscriberIdentity.outputs.identityName
   }
 }
 
