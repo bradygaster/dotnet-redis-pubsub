@@ -33,8 +33,9 @@ module app '../core/host/container-app-upsert.bicep' = {
         value: 'Development'
       }
     ]
-    targetPort: 80
+    targetPort: 8080
     serviceBinds: serviceBinds
+
   }
 }
 
