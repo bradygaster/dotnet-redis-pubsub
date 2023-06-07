@@ -8,6 +8,9 @@ param containerRegistryName string
 param exists bool
 param serviceName string = 'subscriber'
 
+@description('An array of service binds')
+param serviceBinds array
+
 resource subscriberIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
   name: identityName
   location: location
@@ -31,6 +34,7 @@ module app '../core/host/container-app-upsert.bicep' = {
       }
     ]
     targetPort: 80
+    serviceBinds: serviceBinds
   }
 }
 
