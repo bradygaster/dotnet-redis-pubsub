@@ -96,6 +96,7 @@ module publisher 'app/publisher.bicep' = {
     containerAppsEnvironmentName: containerApps.outputs.environmentName
     containerRegistryName: containerApps.outputs.registryName
     identityName: publisherIdentity.outputs.identityName
+    serviceBinds: [ redis.outputs.serviceBind ]
   }
 }
 
@@ -111,6 +112,7 @@ module subscriber 'app/subscriber.bicep' = {
     containerAppsEnvironmentName: containerApps.outputs.environmentName
     containerRegistryName: containerApps.outputs.registryName
     identityName: subscriberIdentity.outputs.identityName
+    serviceBinds: [ redis.outputs.serviceBind ]
   }
 }
 
