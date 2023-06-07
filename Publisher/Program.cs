@@ -1,4 +1,5 @@
 using Common;
+using Microsoft.Extensions.Configuration;
 using StackExchange.Redis;
 using System.Text.Json;
 
@@ -20,9 +21,16 @@ var summaries = new[]
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
 
-string RedisConnectionString = "redis:6379";
-ConnectionMultiplexer connection = ConnectionMultiplexer.Connect(RedisConnectionString);
-string Channel = "test-channel";
+//string RedisConnectionString = "redis:6379";
+//ConnectionMultiplexer connection = ConnectionMultiplexer.Connect(RedisConnectionString);
+//string Channel = "test-channel";
+
+app.MapGet("/", (IConfiguration configuration) =>
+{
+    configuration.AsEnumerable().OrderBy(_ => _.Key).ToList();
+})
+.WithName("GetEnvironmentVariables")
+.WithOpenApi();
 
 app.MapGet("/weatherforecast", () =>
 {
@@ -43,8 +51,8 @@ app.MapGet("/weatherforecast", () =>
 app.MapPost("/weatherforecast", (WeatherForecast forecast, ILogger<Program> logger) =>
 {
     logger.LogInformation("Sending message to test-channel");
-    var pubsub = connection.GetSubscriber();
-    pubsub.PublishAsync(Channel, JsonSerializer.Serialize(forecast), CommandFlags.FireAndForget);
+    //var pubsub = connection.GetSubscriber();
+    //pubsub.PublishAsync(Channel, JsonSerializer.Serialize(forecast), CommandFlags.FireAndForget);
     logger.LogInformation("Message Successfully sent to test-channel");
 
     return Results.Created();
