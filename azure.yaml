@@ -2,7 +2,7 @@
 
 name: RedisPubSubWithDotNet
 metadata:
-  template: dotnet-redis-pubsub-azure-container-apps
+  template: dotnet-redis-pubsub-azure-container-apps@1.0.0
 services:
   publisher:
     project: ./Publisher
